@@ -54,13 +54,21 @@ export default function Home() {
     ]);
   };
 
-  const handleStopBackup = () => {
+  const handleStopBackup = async () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
-      addLog('error', 'Backup job stopped by the user.');
-      setIsBackingUp(false);
-      setCurrentDb(null);
+    }
+    
+    addLog('error', 'Stopping backup process and terminating connections...');
+    setIsBackingUp(false);
+    setCurrentDb(null);
+
+    try {
+      await fetch('/api/backup/stop', { method: 'POST' });
+      addLog('error', 'Backup job stopped and all database connections terminated.');
+    } catch (err) {
+      addLog('error', 'Aborted local request, but failed to notify server of process stop.');
     }
   };
 

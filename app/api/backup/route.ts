@@ -21,6 +21,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   const encoder = new TextEncoder();
   let activeChild: any = null;
+  let useWsl = false;
 
   // Kill running subprocesses immediately if request is aborted by client
   req.signal.addEventListener('abort', () => {
@@ -28,6 +29,11 @@ export async function POST(req: NextRequest) {
       try {
         activeChild.kill('SIGKILL');
       } catch (e) {}
+      if (useWsl) {
+        try {
+          exec('wsl pkill -9 mydumper');
+        } catch (e) {}
+      }
     }
   });
 
@@ -122,7 +128,7 @@ export async function POST(req: NextRequest) {
         send({ type: 'databases', databases });
 
         // Check mydumper presence and fallback to WSL
-        let useWsl = false;
+        useWsl = false;
         const mydumperExists = await checkMydumper();
         if (!mydumperExists) {
           if (process.platform === 'win32') {
@@ -329,6 +335,11 @@ export async function POST(req: NextRequest) {
         try {
           activeChild.kill('SIGKILL');
         } catch (e) {}
+        if (useWsl) {
+          try {
+            exec('wsl pkill -9 mydumper');
+          } catch (e) {}
+        }
       }
     }
   });
