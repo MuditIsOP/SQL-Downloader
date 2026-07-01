@@ -31,6 +31,7 @@ export default function Home() {
   // Refs
   const terminalRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const isRunningRef = useRef(false);
 
   // Auto-scroll logic: only scroll if the user was already near the bottom
   useEffect(() => {
@@ -61,6 +62,7 @@ export default function Home() {
     }
     
     addLog('error', 'Stopping backup process and terminating connections...');
+    isRunningRef.current = false;
     setIsBackingUp(false);
     setCurrentDb(null);
 
@@ -74,7 +76,8 @@ export default function Home() {
 
   const handleStartBackup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isBackingUp) return;
+    if (isBackingUp || isRunningRef.current) return;
+    isRunningRef.current = true;
 
     // Reset State
     setIsBackingUp(true);
@@ -189,6 +192,7 @@ export default function Home() {
         addLog('error', `Network error while connecting to backup endpoint: ${fetchErr.message || fetchErr}`);
       }
     } finally {
+      isRunningRef.current = false;
       setIsBackingUp(false);
       setCurrentDb(null);
       abortControllerRef.current = null;

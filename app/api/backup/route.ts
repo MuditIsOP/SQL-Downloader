@@ -124,6 +124,11 @@ export async function POST(req: NextRequest) {
           return;
         }
 
+        if (req.signal.aborted) {
+          controller.close();
+          return;
+        }
+
         send({ type: 'info', message: `Discovered ${databases.length} database(s) to back up: ${databases.join(', ')}` });
         send({ type: 'databases', databases });
 
@@ -155,6 +160,10 @@ export async function POST(req: NextRequest) {
         let failCount = 0;
 
         for (const dbName of databases) {
+          if (req.signal.aborted) {
+            send({ type: 'info', message: 'Backup job aborted. Terminating process...' });
+            break;
+          }
           send({ type: 'db_start', db: dbName, message: `Starting backup of database: ${dbName}` });
 
           const targetDir = path.join(process.cwd(), 'output', identity, dbName);
