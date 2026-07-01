@@ -23,8 +23,19 @@ export async function POST(req: NextRequest) {
   let activeChild: any = null;
   let useWsl = false;
 
-  // Reset global stop flag in memory for this new session
-  (global as any).isBackupStopRequested = false;
+  // Remove stop lock file if it exists to start a fresh session
+  try {
+    await fs.unlink(path.join(process.cwd(), 'backup_stop.lock'));
+  } catch (e) {}
+
+  const checkStopLock = async () => {
+    try {
+      await fs.access(path.join(process.cwd(), 'backup_stop.lock'));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   // Kill running subprocesses immediately if request is aborted by client
   req.signal.addEventListener('abort', () => {
@@ -127,7 +138,7 @@ export async function POST(req: NextRequest) {
           return;
         }
 
-        if ((global as any).isBackupStopRequested || req.signal.aborted) {
+        if (await checkStopLock() || req.signal.aborted) {
           controller.close();
           return;
         }
@@ -163,7 +174,7 @@ export async function POST(req: NextRequest) {
         let failCount = 0;
 
         for (const dbName of databases) {
-          if ((global as any).isBackupStopRequested || req.signal.aborted) {
+          if (await checkStopLock() || req.signal.aborted) {
             send({ type: 'info', message: 'Backup job aborted. Terminating process...' });
             break;
           }

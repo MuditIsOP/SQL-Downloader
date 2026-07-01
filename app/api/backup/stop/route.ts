@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST() {
   try {
-    // Set global stop flag in memory
-    (global as any).isBackupStopRequested = true;
+    // Create filesystem lock file to share stop state across isolated Next.js worker processes
+    try {
+      await fs.writeFile(path.join(process.cwd(), 'backup_stop.lock'), 'stop');
+    } catch (e) {}
 
     // 1. Terminate all mydumper instances inside WSL
     exec('wsl pkill -9 mydumper');
