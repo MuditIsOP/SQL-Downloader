@@ -23,6 +23,9 @@ export async function POST(req: NextRequest) {
   let activeChild: any = null;
   let useWsl = false;
 
+  // Reset global stop flag in memory for this new session
+  (global as any).isBackupStopRequested = false;
+
   // Kill running subprocesses immediately if request is aborted by client
   req.signal.addEventListener('abort', () => {
     if (activeChild) {
@@ -124,7 +127,7 @@ export async function POST(req: NextRequest) {
           return;
         }
 
-        if (req.signal.aborted) {
+        if ((global as any).isBackupStopRequested || req.signal.aborted) {
           controller.close();
           return;
         }
@@ -160,7 +163,7 @@ export async function POST(req: NextRequest) {
         let failCount = 0;
 
         for (const dbName of databases) {
-          if (req.signal.aborted) {
+          if ((global as any).isBackupStopRequested || req.signal.aborted) {
             send({ type: 'info', message: 'Backup job aborted. Terminating process...' });
             break;
           }

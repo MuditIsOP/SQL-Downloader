@@ -5,6 +5,9 @@ export const dynamic = 'force-dynamic';
 
 export async function POST() {
   try {
+    // Set global stop flag in memory
+    (global as any).isBackupStopRequested = true;
+
     // 1. Terminate all mydumper instances inside WSL
     exec('wsl pkill -9 mydumper');
 
