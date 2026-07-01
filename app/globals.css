@@ -1,0 +1,493 @@
+/* CSS Design System for MySQL Database Backup Tool */
+
+:root {
+  /* Color Tokens */
+  --bg-deep: hsl(222, 24%, 6%);
+  --bg-surface: hsl(222, 20%, 10%);
+  --bg-card: hsl(222, 18%, 13%);
+  --border-subtle: hsl(222, 15%, 18%);
+  --border-focus: hsl(217, 91%, 60%);
+  --text-primary: hsl(210, 40%, 98%);
+  --text-secondary: hsl(215, 20%, 65%);
+  --text-muted: hsl(215, 12%, 45%);
+  
+  /* Cyberpunk Accents */
+  --primary: hsl(217, 91%, 60%);
+  --primary-glow: hsla(217, 91%, 60%, 0.15);
+  --primary-hover: hsl(217, 95%, 68%);
+  
+  --success: hsl(142, 70%, 45%);
+  --success-glow: hsla(142, 70%, 45%, 0.15);
+  
+  --error: hsl(350, 80%, 55%);
+  --error-glow: hsla(350, 80%, 55%, 0.15);
+  
+  --warning: hsl(45, 93%, 47%);
+  --warning-glow: hsla(45, 93%, 47%, 0.15);
+
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  
+  --transition-fast: 0.12s ease;
+  --transition-normal: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden; /* Avoid page level scrolling */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: radial-gradient(circle at 50% 0%, hsl(220, 30%, 11%) 0%, var(--bg-deep) 70%);
+  padding: 1rem 1.5rem;
+}
+
+/* Header styling */
+.header {
+  text-align: center;
+  margin-bottom: 0.75rem;
+  max-width: 700px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, hsl(210, 40%, 98%) 30%, hsl(217, 91%, 70%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.25rem;
+}
+
+.header p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* Base Page Layout (Full height dashboard) */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1.15fr 1.85fr;
+  gap: 1.25rem;
+  flex-grow: 1;
+  min-height: 0; /* Allows grid children to shrink and scroll internal elements */
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+    overflow-y: auto; /* Fallback to scrolling on small viewports */
+  }
+  html, body {
+    overflow: auto;
+  }
+}
+
+/* Premium Card Panels */
+.panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  min-height: 0; /* Enable internal scrolling */
+}
+
+.panel-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Form Styles */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-field {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.8rem;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  transition: var(--transition-fast);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+
+/* Grid for smaller inputs (port/threads) */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* Help Box (Minimal read-only info) */
+.info-box {
+  background: hsla(217, 91%, 60%, 0.04);
+  border: 1px dashed hsla(217, 91%, 60%, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin-top: auto; /* Push it to the bottom of the sidebar */
+  flex-shrink: 0;
+}
+
+.info-box pre {
+  font-family: var(--font-mono);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  padding: 0.4rem;
+  border-radius: 4px;
+  margin-top: 0.4rem;
+  overflow-x: auto;
+  border: 1px solid var(--border-subtle);
+  font-size: 0.7rem;
+}
+
+/* Action Button */
+.btn {
+  background: var(--primary);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--transition-normal);
+  box-shadow: 0 4px 12px 0 var(--primary-glow);
+  flex-shrink: 0;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn.btn-danger {
+  background: var(--error);
+  box-shadow: 0 4px 12px 0 var(--error-glow);
+}
+
+.btn.btn-danger:hover:not(:disabled) {
+  background: hsl(350, 85%, 62%);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Live Terminal Log Panel */
+.terminal-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.6rem;
+  flex-shrink: 0;
+}
+
+.terminal-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dot.red { background-color: hsl(350, 70%, 50%); }
+.dot.yellow { background-color: hsl(45, 90%, 50%); }
+.dot.green { background-color: hsl(140, 70%, 45%); }
+
+.terminal-title-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.terminal-body {
+  flex-grow: 1;
+  background: hsl(222, 28%, 4%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  scroll-behavior: smooth;
+  min-height: 0; /* Crucial for scrolling inside flex container */
+}
+
+/* Custom Scrollbar for Terminal */
+.terminal-body::-webkit-scrollbar,
+.db-checklist-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.terminal-body::-webkit-scrollbar-track,
+.db-checklist-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.terminal-body::-webkit-scrollbar-thumb,
+.db-checklist-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+.terminal-body::-webkit-scrollbar-thumb:hover,
+.db-checklist-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Log Lines styling */
+.log-line {
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.log-line.info {
+  color: hsl(210, 70%, 75%);
+}
+
+.log-line.log {
+  color: hsl(215, 10%, 80%);
+}
+
+.log-line.db-start {
+  color: hsl(260, 80%, 75%);
+  font-weight: 600;
+  border-left: 2px solid hsl(260, 80%, 65%);
+  padding-left: 0.4rem;
+}
+
+.log-line.db-success {
+  color: var(--success);
+  font-weight: 600;
+  background: var(--success-glow);
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+}
+
+.log-line.db-fail {
+  color: var(--error);
+  font-weight: 600;
+  background: var(--error-glow);
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+}
+
+.log-line.error {
+  color: var(--error);
+  font-weight: 600;
+  background: var(--error-glow);
+  padding: 0.4rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid hsla(350, 80%, 55%, 0.2);
+}
+
+.log-line.success {
+  color: var(--success);
+  font-weight: 700;
+  background: var(--success-glow);
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid hsla(142, 70%, 45%, 0.2);
+  font-size: 0.85rem;
+}
+
+/* Database checklist */
+.db-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+.db-checklist-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.15rem;
+}
+
+.db-checklist-scroll {
+  max-height: 120px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.db-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  padding: 0.15rem 0.35rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.db-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.db-name {
+  color: var(--text-primary);
+}
+
+.db-status {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.db-status.pending {
+  color: var(--text-muted);
+}
+
+.db-status.running {
+  color: var(--primary);
+  animation: pulse 1.5s infinite;
+}
+
+.db-status.completed {
+  color: var(--success);
+}
+
+.db-status.failed {
+  color: var(--error);
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* Empty State */
+.terminal-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.terminal-empty svg {
+  color: var(--text-muted);
+  opacity: 0.3;
+}
